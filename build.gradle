@@ -1,0 +1,66 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+}
+
+plugins {
+	id "java"
+	id "eclipse"
+	id "groovy"
+	id "io.spring.dependency-management" version "0.6.1.RELEASE"
+	id "org.springframework.boot" version "1.4.2.RELEASE" apply false
+}
+
+apply plugin: "eclipse"
+apply plugin: "groovy"
+apply plugin: "io.spring.dependency-management"
+apply plugin: "org.springframework.boot"
+
+description = 'Repro for Quartz job issue'
+
+jar {
+	baseName = 'QuartzJobIssue'
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	compile "org.springframework.boot:spring-boot-starter-hateoas"
+	compile "org.springframework.boot:spring-boot-starter-data-jpa"
+	compile "org.springframework.boot:spring-boot-starter-web"
+	compile "org.springframework.boot:spring-boot-starter-actuator"
+	compile "org.springframework:spring-context-support"
+	compile "org.hibernate:hibernate-java8:5.1.2.Final"
+	compile "org.atteo:evo-inflector:1.2.1"
+	compile "commons-validator:commons-validator:1.4.1"
+	compile "commons-lang:commons-lang:2.4"
+	compile "javax.mail:mail:1.4.7"
+	compile("org.thymeleaf:thymeleaf-spring4:3.0.3.RELEASE")
+	compile "org.springframework.ldap:spring-ldap-core:2.0.4.RELEASE"
+	compile "org.springframework.security:spring-security-web:4.0.3.RELEASE"
+	compile "com.google.guava:guava:18.0"
+
+	runtime "org.mariadb.jdbc:mariadb-java-client:1.5.5"
+	runtime "org.liquibase:liquibase-core:3.5.3"
+	compile "org.quartz-scheduler:quartz:2.2.1"
+	compile "org.quartz-scheduler:quartz-jobs:2.2.3"
+}
+
+bootRun {
+	enableAssertions=true
+    if (project.hasProperty("appArgs")) {
+        args Eval.me(appArgs)
+    }
+}
+
+bootRepackage {
+        classifier = "full"
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '3.3'
+}
